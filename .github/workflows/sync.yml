@@ -1,0 +1,36 @@
+name: Sync with Upstream and Build Docker
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
+
+      - name: Sync with upstream main branch
+        run: |
+          git remote add upstream https://github.com/logseq/logseq.git
+          git fetch upstream
+          git checkout master  # Switch to the main branch of your fork
+          git merge upstream/master  # Merge changes from upstream main
+          git push origin master  # Push changes to your fork's main branch
+
+      - name: Sync with upstream feature branch
+        run: |
+          git fetch upstream feat/db  # Replace with the actual feature branch name
+          git merge upstream/feat/db  # Merge changes from the feature branch
+          git push origin master  # Push the updated main branch to your fork
+
+      - name: Trigger Build Workflow
+        uses: peter-evans/workflow-dispatch@v1
+        with:
+          repository: vbbot/logseq
+          workflow: build-docker.yml # Name of the build workflow file
+          ref: master  # The branch to run the workflow on
