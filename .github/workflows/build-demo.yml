@@ -61,7 +61,7 @@ jobs:
         uses: cloudflare/pages-action@1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: 2553ea8236c11ea0f88de28fce1cbfee
+          accountId: 956c4567dc7377318037b90a0b06da58
           projectName: ${{ github.event.inputs.cloudflare-project-name || 'logseq-demo' }}
           directory: 'static'
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
